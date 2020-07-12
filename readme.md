@@ -83,7 +83,7 @@ Select **GitHub** as the source provider. Then click **Connect to GitHub**, and 
 
 Select **Github webhooks** under **change detection options**. Click **Next** and **Skip build stage** > **Skip**. Select **AWS Elastic Beanstalk** for the deploy provider. 
 
-Make sure the region is the one you created your application in, and select your **application** and the **environment** for your application.  ![Deploy provider](https://markss3bucket.s3.amazonaws.com/deploy.PNG)
+Make sure the region is the one you created your application in, and select your **application** and the **environment** for your application.  ![Deploy provider](https://res.cloudinary.com/markpkng/image/upload/v1594582011/deploy_hmzm2a.png)
 
 Also if you are ever looking for an application/service you created on AWS and can't find it, always check that you are in the correct region, otherwise the application you're looking for won't be there. You can see your current region at the top right of the AWS console.
 
@@ -93,7 +93,7 @@ Click **Next** > **Create pipeline**. You should now see your application start 
 
 Once your application shows **Succeeded** under **Source** and **Deploy**, navigate back to **Elastic Beanstalk** > **Environments** and select the environment for your application. Click on the link at the top to check and see your deployed app on AWS!
 
-![deployed app](https://markss3bucket.s3.amazonaws.com/deployed+app.PNG)
+![deployed app](https://res.cloudinary.com/markpkng/image/upload/v1594582011/deployed_app_yitsae.png)
 
 
 
@@ -303,11 +303,11 @@ Below in the description you'll need the **Public DNS (IPv4)** address if you wa
 
 An easier way is to right click your instance and click **Connect** > **EC2 Instance Connect** > **Connect**.
 
-![connect to ec2 instance](https://markss3bucket.s3.amazonaws.com/connect.PNG)
+![connect to ec2 instance](https://res.cloudinary.com/markpkng/image/upload/v1594582011/connect_wkkhjn.png)
 
 Either way you choose to SSH into your instance, eventually you will get something like this:
 
-![ec2 ssh](https://markss3bucket.s3.amazonaws.com/ssh.PNG)
+![ec2 ssh](https://res.cloudinary.com/markpkng/image/upload/v1594582011/ssh_ozbyjs.png)
 
 Once you're in, type `cd ../../opt/elasticbeanstalk/deployment` 
 
@@ -315,7 +315,7 @@ In this directory is an **env** file with the key : value pairs that AWS loads i
 
 You can view the values by typing `cat env`
 
-![env variables](https://markss3bucket.s3.amazonaws.com/env.PNG)
+![env variables](https://res.cloudinary.com/markpkng/image/upload/v1594582011/env_ppia89.png)
 
 Export these variables so we can use them by typing `export $(grep -v '^#' env | xargs)`
 
@@ -333,5 +333,5 @@ For each Knex command we want to run, we need to prefix our command with the var
 
 Now we are finished! You can use your Elastic Beanstalk application's URL or the EC2's public IP address to test our your application.
 
-![insomnia](https://markss3bucket.s3.amazonaws.com/insomnia.PNG)
+![insomnia](https://res.cloudinary.com/markpkng/image/upload/v1594582011/insomnia_nwykaq.png)
 
