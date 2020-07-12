@@ -6,7 +6,10 @@
     "scripts": {
         "start": "node app.js",
         "dev": "nodemon app.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "migrate:latest": "knex migrate:latest --env production",
+        "seed:run": "knex seed:run --env production",
+        "migrate:rollback": "knex migrate:rollback --env production"
     },
     "keywords": [],
     "author": "",
