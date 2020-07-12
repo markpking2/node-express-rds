@@ -101,7 +101,7 @@ Once your application shows **Succeeded** under **Source** and **Deploy**, navig
 
 Now lets setup a PostgreSQL database on **RDS** to use for our application.
 
-Back in the environment for your application, on the left click **Configuration**. Look for **Database** at the bottom and click **Edit**. Under **Database Settings** select  **PostgreSQL** for the **Engine**. We'll use **Engine version** **11.6**. For the **Instance class** select **db.t2.micro**. We'll leave the size at **5GB**.
+Back in the environment for your application, on the left click **Configuration**. Look for **Database** at the bottom and click **Edit**. Under **Database Settings** select  **PostgreSQL** for the **Engine**. We'll use **Engine version** **11.6**. For the **Instance class** select **db.t2.micro**. We'll set the size at **1GB**.
 
 Enter a **username** and **password** for your database.  For this guide I'll use `dbuser` for the **username** and `dbpassword` for the **password** but you can set your credentials to anything. Click **Apply** to create the RDS instance.
 
