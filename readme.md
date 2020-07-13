@@ -284,22 +284,9 @@ If you run your server now, you can send a GET request to `localhost:5000/dogs` 
 
 Two of my favorite tools for easily sending requests to APIs are [Insomnia](https://insomnia.rest/) and [Postman](https://www.postman.com/product/api-client/).
 
-Let's also add some script files to our repository. Create a folder called **scripts** in the root directory of your project. Then add the following 3 files: 
+Let's also add some script files to our repository. Create a folder called **scripts** in the root directory of your project. Then add the following script to make Knex commands easier to use: 
 
-**knex_migrate_latest.sh**
-
-```bash
-#!/bin/bash
-
-export $(grep -v '^#' ../../../../opt/elasticbeanstalk/deployment/env | xargs)
-sudo RDS_DB_NAME=${RDS_DB_NAME} \
-RDS_HOSTNAME=${RDS_HOSTNAME} \
-RDS_USERNAME=${RDS_USERNAME} \
-RDS_PASSWORD=${RDS_PASSWORD} \
-npx knex migrate:latest --env production
-```
-
-**knex_migrate_rollback.sh**
+**knex.sh**
 
 ```bash
 #!/bin/bash
@@ -309,20 +296,7 @@ sudo RDS_DB_NAME=${RDS_DB_NAME} \
 RDS_HOSTNAME=${RDS_HOSTNAME} \
 RDS_USERNAME=${RDS_USERNAME} \
 RDS_PASSWORD=${RDS_PASSWORD} \
-npx knex migrate:rollback --env production
-```
-
-**knex_seed_run.sh**
-
-```bash
-#!/bin/bash
-
-export $(grep -v '^#' ../../../../opt/elasticbeanstalk/deployment/env | xargs)
-sudo RDS_DB_NAME=${RDS_DB_NAME} \
-RDS_HOSTNAME=${RDS_HOSTNAME} \
-RDS_USERNAME=${RDS_USERNAME} \
-RDS_PASSWORD=${RDS_PASSWORD} \
-npx knex seed:run --env production
+npx knex $1 --env production
 ```
 
 Before we deploy our updated app, go back to the Elastic Beanstalk dashboard and select your application's environment.  On the left click **Configuration** > **Software** > **Edit**. At the bottom under **Environment properties**, add the following key : value pairs:
@@ -369,15 +343,15 @@ Once you SSH into your instance, you can navigate to the scripts folder of your 
 
 `cd ../../var/app/current/scripts`
 
-Now we'll run the migration and seed files. First run the migration we created:
+Now we'll run the migration and seed files using the script we created earlier. First run the migration we created:
 
-`bash knex_migrate_latest.sh`
+`bash knex.sh "migrate:latest"`
 
 Then:
 
-`bash knex_seed_run.sh`
+`bash knex.sh "seed:run"`
 
-![scripts](https://res.cloudinary.com/markpkng/image/upload/v1594634051/scripts_ys00wz.png)
+![scripts](https://res.cloudinary.com/markpkng/image/upload/v1594635497/scripts_hpjzdk.png)
 
 Now we are finished! You can use your Elastic Beanstalk application's URL or the EC2's public IP address to test out your application.
 
