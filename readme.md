@@ -297,9 +297,25 @@ After the environment is finished updating, make a commit and push the updates t
 
 Once the server is deployed, we need to SSH (Secure Shell; used to securely connect to another computer) into our instance to run the DB migrations.
 
-Go to the AWS console, then under **Services** > **EC2** > **Running instances**. Click on your running server instance. 
+Go to the AWS console, then under **Services** > **EC2** > **Running instances**. Click on your running server instance.
 
-Below in the description you'll need the **Public DNS (IPv4)** address if you want to SSH from your own terminal.  You'll also need a private key (.pem) file.  You can read more about how SSH into an EC2 instance [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html).
+First we need to edit the **security group** for our instance so we can SSH into it. 
+
+Below in the description on the right side, select the **security group** for your instance.
+
+![security group](https://res.cloudinary.com/markpkng/image/upload/v1594623035/security_group_z3fao5.png)
+
+Then, select the **security group** with the **name** of your application's environment. Click **Edit inbound rules**.
+
+![inbound rules](https://res.cloudinary.com/markpkng/image/upload/v1594623251/inbound_rules_ry8ziq.png)
+
+Click **Add rule**, select **SSH** and for the **Source** select **Anywhere**.
+
+![ssh inbound rule](https://res.cloudinary.com/markpkng/image/upload/v1594623368/ssh_inbound_rule_tghejv.png)
+
+Then click **Save rules**. Now you will be able to SSH into the server.
+
+Also, below in the description you'll need the **Public DNS (IPv4)** address if you want to SSH from your own terminal.  You'll also need a private key (.pem) file.  You can read more about how SSH into an EC2 instance [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html).
 
 An easier way is to right click your instance and click **Connect** > **EC2 Instance Connect** > **Connect**.
 
