@@ -101,7 +101,7 @@ Once your application shows **Succeeded** under **Source** and **Deploy**, navig
 
 Now lets setup a PostgreSQL database on **RDS** to use for our application.
 
-Back in the environment for your application, on the left click **Configuration**. Look for **Database** at the bottom and click **Edit**. Under **Database Settings** select  **PostgreSQL** for the **Engine**. We'll use **Engine version** **11.6**. For the **Instance class** select **db.t2.micro**. We'll set the size at **1GB**.
+Back in the environment for your application, on the left click **Configuration**. Look for **Database** at the bottom and click **Edit**. Under **Database Settings** select  **PostgreSQL** for the **Engine**. We'll use **Engine version** **11.6**. For the **Instance class** select **db.t2.micro**. We'll leave the storage size at **5GB**.
 
 Enter a **username** and **password** for your database.  For this guide I'll use `dbuser` for the **username** and `dbpassword` for the **password** but you can set your credentials to anything. Click **Apply** to create the RDS instance.
 
@@ -215,7 +215,7 @@ exports.seed = function (knex) {
         { name: "York", breed: "Australian Shepherd", age: 2 },
         { name: "Lilo", breed: "Australian Shepherd", age: 4 },
         { name: "Bear", breed: "Wheaton Terrier", age: 12 },
-    ]);
+    ], "id");
 };
 ```
 
@@ -284,10 +284,50 @@ If you run your server now, you can send a GET request to `localhost:5000/dogs` 
 
 Two of my favorite tools for easily sending requests to APIs are [Insomnia](https://insomnia.rest/) and [Postman](https://www.postman.com/product/api-client/).
 
+Let's also add some script files to our repository. Create a folder called **scripts** in the root directory of your project. Then add the following 3 files: 
+
+**knex_migrate_rollback.sh**
+
+```bash
+#!/bin/bash
+
+export $(grep -v '^#' ../../../../opt/elasticbeanstalk/deployment/env | xargs)
+sudo RDS_DB_NAME=${RDS_DB_NAME} \
+RDS_HOSTNAME=${RDS_HOSTNAME} \
+RDS_USERNAME=${RDS_USERNAME} \
+RDS_PASSWORD=${RDS_PASSWORD} \
+npx knex migrate:latest --env production
+```
+
+**knex_migrate_rollback.sh**
+
+```bash
+#!/bin/bash
+
+export $(grep -v '^#' ../../../../opt/elasticbeanstalk/deployment/env | xargs)
+sudo RDS_DB_NAME=${RDS_DB_NAME} \
+RDS_HOSTNAME=${RDS_HOSTNAME} \
+RDS_USERNAME=${RDS_USERNAME} \
+RDS_PASSWORD=${RDS_PASSWORD} \
+npx knex migrate:rollback --env production
+```
+
+**knex_seed_run.sh**
+
+```bash
+#!/bin/bash
+
+export $(grep -v '^#' ../../../../opt/elasticbeanstalk/deployment/env | xargs)
+sudo RDS_DB_NAME=${RDS_DB_NAME} \
+RDS_HOSTNAME=${RDS_HOSTNAME} \
+RDS_USERNAME=${RDS_USERNAME} \
+RDS_PASSWORD=${RDS_PASSWORD} \
+npx knex seed:run --env production
+```
+
 Before we deploy our updated app, go back to the Elastic Beanstalk dashboard and select your application's environment.  On the left click **Configuration** > **Software** > **Edit**. At the bottom under **Environment properties**, add the following key : value pairs:
 
 ```
-NODE_ENV : production
 DB_ENV : production
 ```
 
@@ -325,29 +365,21 @@ Either way you choose to SSH into your instance, eventually you will get somethi
 
 ![ec2 ssh](https://res.cloudinary.com/markpkng/image/upload/v1594582011/ssh_ozbyjs.png)
 
-Once you're in, type `cd ../../opt/elasticbeanstalk/deployment` 
+Once you SSH into your instance, you can navigate to the scripts folder of your app by typing:
 
-In this directory is an **env** file with the key : value pairs that AWS loads into our server. We will need to export these values so we can use them in the terminal.
+`cd ../../var/app/current/scripts`
 
-You can view the values by typing `cat env`
+Now we'll run the migration and seed files. First run the migration we created:
 
-![env variables](https://res.cloudinary.com/markpkng/image/upload/v1594582011/env_ppia89.png)
+`bash knex_migrate_latest.sh`
 
-Export these variables so we can use them by typing `export $(grep -v '^#' env | xargs)`
+Then:
 
-Now, cd into the directory of our deployed application by typing:
+`bash knex_seed_run.sh`
 
-`cd ~`
+![scripts](https://res.cloudinary.com/markpkng/image/upload/v1594634051/scripts_ys00wz.png)
 
-`cd ../../var/app/current`
-
-For each Knex command we want to run, we need to prefix our command with the variables we exported earlier. Run the following commands to migrate our database and insert seeds:
-
-`sudo RDS_DB_NAME=${RDS_DB_NAME} RDS_HOSTNAME=${RDS_HOSTNAME} RDS_USERNAME=${RDS_USERNAME}  RDS_PASSWORD=${RDS_PASSWORD} npx knex migrate:latest --env production`
-
-`sudo RDS_DB_NAME=${RDS_DB_NAME} RDS_HOSTNAME=${RDS_HOSTNAME} RDS_USERNAME=${RDS_USERNAME}  RDS_PASSWORD=${RDS_PASSWORD} npx knex seed:run --env production`
-
-Now we are finished! You can use your Elastic Beanstalk application's URL or the EC2's public IP address to test our your application.
+Now we are finished! You can use your Elastic Beanstalk application's URL or the EC2's public IP address to test out your application.
 
 ![insomnia](https://res.cloudinary.com/markpkng/image/upload/v1594582011/insomnia_nwykaq.png)
 
