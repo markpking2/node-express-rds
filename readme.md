@@ -286,7 +286,7 @@ Two of my favorite tools for easily sending requests to APIs are [Insomnia](http
 
 Let's also add some script files to our repository. Create a folder called **scripts** in the root directory of your project. Then add the following 3 files: 
 
-**knex_migrate_rollback.sh**
+**knex_migrate_latest.sh**
 
 ```bash
 #!/bin/bash
